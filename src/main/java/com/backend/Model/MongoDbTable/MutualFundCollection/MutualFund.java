@@ -10,6 +10,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.math.BigDecimal;
 import java.util.Date;
 @Document(collection = "mutual_fund")
 @Data
@@ -29,7 +30,7 @@ public class MutualFund {
 
     private String isinDivReinvestment;  // ISIN for IDCW Reinvestment (if available, else null)
 
-    private double nav;  // Net Asset Value (NAV) at the given date (e.g., 18.9)
+    private BigDecimal nav;  // Net Asset Value (NAV) at the given date (e.g., 18.9)
 
     @CreatedDate
     private Date createdOn;  // Date when the document was created
