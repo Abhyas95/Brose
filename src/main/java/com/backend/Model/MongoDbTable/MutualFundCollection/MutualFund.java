@@ -24,6 +24,8 @@ public class MutualFund {
 
     private int schemeCode;  // Scheme Code (e.g., 148921)
 
+    private String amcId;
+
     private String schemeName;  // Name of the Scheme (e.g., Aditya Birla Sun Life Multi-Cap Fund-Direct Growth)
 
     private String isinDivGrowth;  // ISIN for Growth/Dividend (e.g., INF209KB1Y49)
