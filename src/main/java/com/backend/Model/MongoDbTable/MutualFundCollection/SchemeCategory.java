@@ -26,7 +26,9 @@ public class SchemeCategory {
 
     private SchemeType schemeType;       // Type of Open-Ended Scheme
 
-    private OpenEndedSchemeType categoryName;                  // Name of the Category (e.g., Multi Cap Fund)
+    private String categoryName;// Name of the Category (e.g., Multi Cap Fund) Money Market
+    private String categoryEnum;// Name of the Category (e.g., Multi Cap Fund) MONEY_MARKET
+
 
     @CreatedDate// Type of Scheme (enum)
     private Date createdOn;

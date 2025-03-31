@@ -22,5 +22,14 @@ public class MutualFundAmcName {
     @Id
     private String id;  // MongoDB document ID
 
+    private String amcName;  // Name of the AMC (e.g., Aditya Birla Sun Life Mutual Fund)
+    private String amcNameEnum;  // Name of the AMC (e.g., Aditya Birla Sun Life Mutual Fund)
 
+    private String schemeCategory;  // AMC Code (e.g., 101)
+
+    @CreatedDate// Type of Scheme (enum)
+    private Date createdOn;
+    @LastModifiedDate// Date when the scheme was created
+    private Date lastUpdatedOn;        // Date when the scheme was last updated
+    private String description;
 }
