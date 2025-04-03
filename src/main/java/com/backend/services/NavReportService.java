@@ -1,7 +1,11 @@
 package com.backend.services;
 
 import com.backend.Model.MongoDbTable.MutualFundCollection.MutualFund;
+import com.backend.Model.MongoDbTable.MutualFundCollection.Scheme;
+import com.backend.Model.MongoDbTable.MutualFundCollection.SchemeCategory;
+import com.backend.Model.MutualFund.Enum.SchemeType;
 import com.backend.repository.MongoRepository.MutualFundRepository;
+import com.backend.repository.MongoRepository.SchemeCategoryRepository;
 import io.micrometer.common.util.StringUtils;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +48,9 @@ public class NavReportService {
 
     @Autowired
     MutualFundRepository mutualFundRepository;
+
+    @Autowired
+    SchemeCategoryRepository schemeCategoryRepository;
     public static final String DELIMITER = ";";
 
 
@@ -74,66 +81,6 @@ public class NavReportService {
                 .get()
                 .build();
 
-//        try (Response response = httpClient.newCall(request).execute()) {
-//            if (response.isSuccessful() && response.body() != null) {
-//                ResponseEntity.ok(response.body().string());
-//
-//
-//                // process nav data
-//
-//                List<MutualFund> mutualFundData = new ArrayList<>();
-//                try (BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream()))) {
-//                    // Read CSV headers
-//                    String line = reader.readLine();
-//                    String[] headers = line.split(DELIMITER);
-//
-//                    while ((line = reader.readLine()) != null) {
-//                        String[] row = line.split(DELIMITER);
-//
-//                        if (row.length == headers.length) {
-//                            String schemeCode = row[0].trim(); // e.g., 149366
-//                            String schemeName = row[1].trim(); // e.g., HDFC Multi Cap Fund - Growth Option
-//                            String isinDivGrowth = row[2].trim(); // e.g., INF179KC1BV9
-//                            String isinDivReinvestment = row[3].trim(); // Could be blank
-//                            BigDecimal nav = new BigDecimal(row[4].trim()); // e.g., 17.163
-//
-//                            BigDecimal purchasePrice = null;
-//                            BigDecimal salePrice = null;
-//
-//                            // Check for optional values
-//                            if (row.length > 5 && !StringUtils.isBlank(row[5].trim())) {
-//                                purchasePrice = new BigDecimal(row[5].trim());
-//                            }
-//
-//                            if (row.length > 6 && !StringUtils.isBlank(row[6].trim())) {
-//                                salePrice = new BigDecimal(row[6].trim());
-//                            }
-//
-//                            String navDate = null;
-//                            if (row.length > 7 && !StringUtils.isBlank(row[7].trim())) {
-//                                navDate = row[7].trim(); // e.g., 28-Mar-2025
-//                            }
-//
-//                            mutualFundData.add(MutualFund.builder()
-//                                    .schemeCode(Integer.parseInt(schemeCode))
-//                                    .schemeName(schemeName)
-//                                    .isinDivGrowth(isinDivGrowth)
-//                                    .isinDivReinvestment(StringUtils.isBlank(isinDivReinvestment) ? null : isinDivReinvestment)
-//                                    .nav(nav)
-//                                    .navDate(navDate)
-//                                    .build());
-//                        }
-//
-//                    }
-//
-//                    log.info("Fetched {} mutual fund data", mutualFundData.size());
-//                }
-//            }
-//
-//        } catch (Exception e) {
-//            log.info("Fetched {} mutual fund data", e);
-//            return ResponseEntity.ok("failed to fetch data");
-//        }
         try (Response response = httpClient.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
 
@@ -150,32 +97,61 @@ public class NavReportService {
                     String[] headers = line.split(DELIMITER);
 
                     while ((line = reader.readLine()) != null) {
-                        String[] row = line.split(DELIMITER);
+                        if(line.isEmpty()){
+                            continue;
+                        }
+                        if(line.contains("Open Ended Schemes")){
+                            // get Headersr
+                            String schemeString = line.substring(0, line.indexOf("(")).trim();
+                            String schemeEnum =  schemeString.replaceAll("[\\s-]+", "_").toUpperCase();
+                            String schemeCategoryString = line.substring(line.indexOf("(") + 1, line.indexOf(")")).trim();
+                            String schemeCategoryENUM = line.replaceAll("[\\s-]+", "_").toUpperCase();
 
-                        if (row.length == headers.length) {
-                            String schemeCode = row[0].trim();
-                            String schemeName = row[1].trim();
-                            String isinDivGrowth = row[2].trim();
-                            String isinDivReinvestment = row[3].trim();
-                            BigDecimal nav = null;
-                            String navDate = null;
+                            SchemeType schemeType = SchemeType.fromName(schemeEnum);
 
-                            if (!StringUtils.isBlank(row[4].trim())) {
-                                nav = new BigDecimal(row[4].trim());
+                            // check if scheme is already present in the database then get that scheme id and populate in next scheme category and same scan
+                        }
+                        else if(line.contains("Close Ended Schemes")){
+                            // get Headersr
+                            String schemeString = line.substring(0, line.indexOf("(")).trim();
+                            String schemeEnum =  schemeString.replaceAll("[\\s-]+", "_").toUpperCase();
+                            String schemeCategoryString = line.substring(line.indexOf("(") + 1, line.indexOf(")")).trim();
+                            String schemeCategoryENUM = line.replaceAll("[\\s-]+", "_").toUpperCase();
+
+                            SchemeType schemeType = SchemeType.fromName(schemeEnum);
+
+                        }
+                        else if (!line.contains(";")) {
+                            // get MUrtual FUnd Amc
+                        }
+                        else {
+                            String[] row = line.split(DELIMITER);
+
+                            if (row.length == headers.length) {
+                                String schemeCode = row[0].trim();
+                                String schemeName = row[1].trim();
+                                String isinDivGrowth = row[2].trim();
+                                String isinDivReinvestment = row[3].trim();
+                                BigDecimal nav = null;
+                                String navDate = null;
+
+                                if (!StringUtils.isBlank(row[4].trim())) {
+                                    nav = new BigDecimal(row[4].trim());
+                                }
+
+                                if (row.length > 7 && !StringUtils.isBlank(row[7].trim())) {
+                                    navDate = row[7].trim();
+                                }
+
+                                mutualFundData.add(MutualFund.builder()
+                               //         .schemeCode(Integer.parseInt(schemeCode))
+                                        .schemeName(schemeName)
+                                        .isinDivGrowth(StringUtils.isBlank(isinDivGrowth) ? null : isinDivGrowth)
+                                        .isinDivReinvestment(StringUtils.isBlank(isinDivReinvestment) ? null : isinDivReinvestment)
+                                        .nav(nav)
+                                        .navDate(navDate)
+                                        .build());
                             }
-
-                            if (row.length > 7 && !StringUtils.isBlank(row[7].trim())) {
-                                navDate = row[7].trim();
-                            }
-
-                            mutualFundData.add(MutualFund.builder()
-                                    .schemeCode(Integer.parseInt(schemeCode))
-                                    .schemeName(schemeName)
-                                    .isinDivGrowth(StringUtils.isBlank(isinDivGrowth) ? null : isinDivGrowth)
-                                    .isinDivReinvestment(StringUtils.isBlank(isinDivReinvestment) ? null : isinDivReinvestment)
-                                    .nav(nav)
-                                    .navDate(navDate)
-                                    .build());
                         }
                     }
 

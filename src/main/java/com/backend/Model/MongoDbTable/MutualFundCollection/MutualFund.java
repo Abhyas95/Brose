@@ -22,9 +22,9 @@ public class MutualFund {
     @Id
     private String id;  // MongoDB document ID
 
-    private int schemeCode;  // Scheme Code (e.g., 148921)
+    private String schemeCode;  // Scheme Code (e.g., 148921)
 
-    private String amcId;
+    private String amcId; // 
 
     private String schemeName;  // Name of the Scheme (e.g., Aditya Birla Sun Life Multi-Cap Fund-Direct Growth)
 

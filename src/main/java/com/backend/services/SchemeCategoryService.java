@@ -34,7 +34,6 @@ public class SchemeCategoryService {
         SchemeCategory existingCategory = schemeCategoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Scheme Category not found!"));
 
-        existingCategory.setSchemeType(updatedCategory.getSchemeType());
         existingCategory.setCategoryName(updatedCategory.getCategoryName());
         existingCategory.setDescription(updatedCategory.getDescription());
 

@@ -22,12 +22,11 @@ public class MutualFundAmcName {
     @Id
     private String id;  // MongoDB document ID
 
-    private int schemeCategoryId;  // Scheme Code (e.g., 148921)
+    private String schemeCategoryId;  // Scheme Code (e.g., 148921)
 
     private String amcName;  // Name of the AMC (e.g., Aditya Birla Sun Life Mutual Fund)
     private String amcNameEnum;  // Name of the AMC (e.g., Aditya Birla Sun Life Mutual Fund)
 
-    private String schemeCategory;  // AMC Code (e.g., 101)
 
     @CreatedDate// Type of Scheme (enum)
     private Date createdOn;

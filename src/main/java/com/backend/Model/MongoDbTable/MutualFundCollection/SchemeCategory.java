@@ -24,8 +24,7 @@ public class SchemeCategory {
     @Id
     private String id;// MongoDB document ID
 
-    private String schemeId;  // Name of the AMC (e.g., Aditya Birla Sun Life Mutual Fund)
-    private SchemeType schemeType;       // Type of Open-Ended Scheme
+    private String schemeId;  // Name of the AMC (e.g., Aditya Birla Sun Life Mutual Fund)// Type of Open-Ended Scheme
 
     private String categoryName;// Name of the Category (e.g., Multi Cap Fund) Money Market
     private String categoryEnum;// Name of the Category (e.g., Multi Cap Fund) MONEY_MARKET
