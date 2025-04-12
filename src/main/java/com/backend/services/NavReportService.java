@@ -148,8 +148,8 @@ public class NavReportService {
                                         .schemeName(schemeName)
                                         .isinDivGrowth(StringUtils.isBlank(isinDivGrowth) ? null : isinDivGrowth)
                                         .isinDivReinvestment(StringUtils.isBlank(isinDivReinvestment) ? null : isinDivReinvestment)
-                                        .nav(nav)
-                                        .navDate(navDate)
+                                    //    .nav(nav)
+                                    //    .navDate(navDate)
                                         .build());
                             }
                         }

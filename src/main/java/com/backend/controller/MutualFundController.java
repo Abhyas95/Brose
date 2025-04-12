@@ -89,8 +89,8 @@ public class MutualFundController {
                         fundMap.put("schemeName", fund.getSchemeName());
                         fundMap.put("isinDivGrowth", fund.getIsinDivGrowth());
                         fundMap.put("isinDivReinvestment", fund.getIsinDivReinvestment());
-                        fundMap.put("nav", fund.getNav());
-                        fundMap.put("navDate", fund.getNavDate());
+                        fundMap.put("nav", fund.getNavInfo().getNav());
+                        fundMap.put("navDate", fund.getNavInfo().getDate());
                         fundList.add(fundMap);
                     }
                     
